@@ -69,7 +69,18 @@ cd build
 **7. Generate Solution with CMake**
 Run CMake to generate the Visual Studio solution.
 ```cmd
-cmake -S ..\llvm-19.1.3\llvm -B . -G "Visual Studio 17 2022" -A x64 -Thost=x64 -DLLVM_ENABLE_PROJECTS="clang;lld" -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON
+cmake -S ..\llvm-19.1.3\llvm -B . -G "Visual Studio 17 2022" ^
+        -A x64 -Thost=x64 -DLLVM_ENABLE_PROJECTS="clang;lld" ^
+        -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=X86 ^
+        -DLLVM_INCLUDE_TESTS=OFF ^
+        -DLLVM_INCLUDE_EXAMPLES=OFF ^
+        -DLLVM_INCLUDE_BENCHMARKS=OFF ^
+        -DLLVM_BUILD_DOCS=OFF ^
+        -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON ^
+        -DLLVM_ENABLE_LTO=ON ^
+        -DLLVM_USE_LINKER=lld ^
+        -DLLVM_OPTIMIZED_TABLEGEN=ON ^
+        -DLLVM_ENABLE_BINDINGS=OFF
 ```
 
 **8. Build the Project**
