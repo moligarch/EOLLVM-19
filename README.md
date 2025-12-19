@@ -6,7 +6,9 @@ Building upon the foundation of [OLLVM-4](https://github.com/obfuscator-llvm/obf
 
 ## Features
 
-- **String Encryption** (`-mllvm -sobf`): **[New]** Encrypts hardcoded string literals and decrypts them at runtime (supports custom keys).
+- **String Encryption** (`-mllvm -sobf`): **[New]** Encrypts hardcoded string literals.
+    - **Static Mode** (Default): Decrypts at startup.
+    - **Stack Mode** (`-sobf_mode=stack`): Decrypts on stack at runtime for maximum security.
 - **Control Flow Flattening** (`-mllvm -fla`): Flattens the CFG to hide logic structure.
 - **Bogus Control Flow** (`-mllvm -bcf`): Adds fake blocks and branches to confuse decompilers.
 - **Instruction Substitution** (`-mllvm -sub`): Replaces standard binary operators with complex, mathematically equivalent sequences.
@@ -77,8 +79,6 @@ cmake -S ..\llvm-19.1.3\llvm -B . -G "Visual Studio 17 2022" ^
         -DLLVM_INCLUDE_BENCHMARKS=OFF ^
         -DLLVM_BUILD_DOCS=OFF ^
         -DLLVM_OBFUSCATION_LINK_INTO_TOOLS=ON ^
-        -DLLVM_ENABLE_LTO=ON ^
-        -DLLVM_USE_LINKER=lld ^
         -DLLVM_OPTIMIZED_TABLEGEN=ON ^
         -DLLVM_ENABLE_BINDINGS=OFF
 ```
@@ -101,8 +101,16 @@ Once built, you can use your new compiler in other Visual Studio projects to obf
     * Change this to **LLVM (clang-cl)**.
     * *Note: You must have "C++ Clang tools for Windows" installed via the VS Installer.*
 3.  **Tell VS to use YOUR Clang:**
-    * You may need to add your `eollvm19\build\Release\bin` folder to your System `PATH` so VS finds your custom compiler instead of the default one.
-    * Alternatively, configure the "LLVM Toolset Version" to use a custom installation.
+    * You may need to add your `eollvm19\build\Release\bin` folder to your System `PATH` so VS finds your custom compiler instead of the default one.(**Recommended** to set `LLVM_INSTALL_DIR` as `<path\to\eollvm19\build\Release>)
+    * Alternatively, create a `Directory.Build.props` your `.sln` file with below content:
+    ```xml
+    <Project>
+        <PropertyGroup>
+            <LLVMInstallDir>$(LLVM_INSTALL_DIR)</LLVMInstallDir>
+            <LLVMToolsVersion>19.1.3</LLVMToolsVersion>
+        </PropertyGroup>
+    </Project>
+    ```
 4.  **Add Obfuscation Flags:**
     * Go to **Properties** -> **C/C++** -> **Command Line**.
     * In **Additional Options**, add your desired flags:
